@@ -112,7 +112,7 @@ LANGUAGE_CODE = 'pt-pt'
 
 TIME_ZONE = 'Europe/Lisbon'
 
-USE_I18N = False
+USE_I18N = True
 
 USE_TZ = True
 
