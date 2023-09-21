@@ -56,16 +56,19 @@ def user_update(request):
 
 def login_view(request):
     form = AuthenticationForm(request)
-    
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
 
         if form.is_valid():
             user = form.get_user()
             auth.login(request, user)
-            messages.success(request, 'Login bem-sucedido!')
+            messages.success(
+                request,
+                f'Successfully logged in! Welcome, {user.first_name}!'
+            )
             return redirect('contact:index')
-        messages.error(request, 'Login inválido.')
+        messages.error(request, 'Invalid login.')
 
     return render(
         request,

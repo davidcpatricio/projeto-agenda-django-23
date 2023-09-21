@@ -16,7 +16,7 @@ class ContactForm(forms.ModelForm):
         ),
         required=False
     )
-    
+
     class Meta:
         model = models.Contact
         fields = (
@@ -24,35 +24,6 @@ class ContactForm(forms.ModelForm):
             'email', 'description', 'category',
             'picture'
         )
-
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
-        
-        if first_name == last_name:
-            msg = ValidationError(
-                'O primeiro nome não pode ser igual ao apelido.',
-                code='invalid',
-            )
-            self.add_error('first_name', msg)
-            self.add_error('last_name', msg)
-
-        return super().clean()
-
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name')
-
-        if first_name == 'ABC':
-            self.add_error(
-                'first_name',
-                ValidationError(
-                    'Veio do add_error',
-                    code='invalid'
-                )
-            )
-
-        return first_name
 
 
 class RegisterForm(UserCreationForm):
@@ -79,7 +50,10 @@ class RegisterForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             self.add_error(
                 'email',
-                ValidationError('Já existe este e-mail.', code='invalid')
+                ValidationError(
+                    'This e-mail address has already been used.',
+                    code='invalid'
+                )
             )
 
         return email
@@ -146,7 +120,7 @@ class RegisterUpdateForm(forms.ModelForm):
             if password1 != password2:
                 self.add_error(
                     'password2',
-                    ValidationError('Senhas não batem')
+                    ValidationError('Passwords don\'t match.')
                 )
 
         return super().clean()
@@ -159,7 +133,10 @@ class RegisterUpdateForm(forms.ModelForm):
             if User.objects.filter(email=email).exists():
                 self.add_error(
                     'email',
-                    ValidationError('Já existe este e-mail', code='invalid')
+                    ValidationError(
+                        'This e-mail address has already been used.',
+                        code='invalid'
+                    )
                 )
 
         return email
